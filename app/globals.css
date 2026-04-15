@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Midnight literary theme */
+    --background: 20 16 12;
+    --foreground: 245 240 232;
+
+    --card: 26 22 18;
+    --card-foreground: 245 240 232;
+
+    --popover: 26 22 18;
+    --popover-foreground: 245 240 232;
+
+    /* Gold/amber primary */
+    --primary: 196 160 90;
+    --primary-foreground: 20 16 12;
+
+    --secondary: 35 30 25;
+    --secondary-foreground: 200 190 175;
+
+    --muted: 40 35 30;
+    --muted-foreground: 140 130 118;
+
+    --accent: 45 40 34;
+    --accent-foreground: 210 200 185;
+
+    --destructive: 180 50 50;
+    --destructive-foreground: 245 240 232;
+
+    --border: 55 48 40;
+    --input: 55 48 40;
+    --ring: 196 160 90;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Refined scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+/* Poem display font */
+.font-poem {
+  font-family: Georgia, Cambria, "Times New Roman", serif;
+  font-size: 0.9375rem;
+  line-height: 2;
+  letter-spacing: 0.01em;
+}
+
+/* Subtle vignette for literary feel */
+.vignette::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%);
+  z-index: 0;
+}

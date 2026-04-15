@@ -1,0 +1,321 @@
+You are Claude Code acting as a senior full-stack product engineer and UX-minded creative writing systems designer.
+
+I want you to help me build an application called:
+
+GENEVIÈVE POETRY ENGINE
+
+OVERVIEW
+Geneviève Poetry Engine is a poetry ideation and composition tool that helps a user go from:
+1. raw topic or idea
+2. emotional intent
+3. imagery and symbolism
+4. preferred poetic form
+5. stylistic constraints
+to:
+6. a strong poem prompt
+7. one or more poem drafts
+8. revision options
+9. line-by-line craft analysis
+
+The product should feel elegant, literary, and modern. Think: writer’s atelier meets intelligent composition lab.
+
+PRIMARY GOAL
+Build an MVP web app that helps users understand poetry and generate better poetry through a structured workflow, not just random AI output.
+
+CORE PRODUCT PHILOSOPHY
+The app should teach and guide, not merely generate.
+It should help users:
+- understand poetry forms
+- choose the right form for their intention
+- build a strong composition prompt
+- generate a poem draft
+- revise and improve the poem through craft-aware feedback
+
+TECH STACK
+Use a modern, production-friendly stack:
+- Next.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui or similarly clean component system
+- simple local state first
+- modular architecture
+- clean separation of UI, prompt construction logic, poetry form logic, and generation services
+
+If a backend/API route is needed, set it up cleanly.
+If LLM integration is stubbed at first, create the architecture so a model provider can be swapped in later.
+
+NAME / BRAND
+App name: Geneviève Poetry Engine
+
+Desired visual identity:
+- elegant
+- romantic but not cheesy
+- literary
+- restrained
+- premium
+- soft neutrals / parchment / ink / midnight tones
+- subtle flourishes, not cluttered
+- avoid childish “AI magic wand” aesthetics
+
+CORE USER FLOW
+Design the app around this workflow:
+
+STEP 1: IDEA INTAKE
+User inputs:
+- topic
+- emotional tone
+- central image
+- theme or question
+- optional context or story seed
+
+STEP 2: POETRY FORM SELECTION
+Allow the user to choose from:
+- Free Verse
+- Sonnet
+- Haiku
+- Villanelle
+- Ballad
+- Ode
+- Elegy
+- Acrostic
+- Spoken Word
+- Prose Poem
+
+For each form, show:
+- short description
+- what it is best for
+- structure rules
+- emotional / stylistic strengths
+- difficulty level
+
+STEP 3: STYLE & CONSTRAINT BUILDER
+User can choose:
+- tone
+- point of view
+- line length preference
+- rhyme or no rhyme
+- dense imagery vs minimalist
+- archaic / classical / modern diction
+- metaphor-heavy vs direct
+- short / medium / long poem
+- optional “avoid clichés”
+- optional target reading experience (haunting, tender, sharp, mystical, mournful, etc.)
+
+STEP 4: PROMPT GENERATOR
+The system should generate a high-quality poetry prompt from the user’s selections.
+
+The prompt should combine:
+- theme
+- emotional intent
+- imagery
+- form
+- constraints
+- desired reader effect
+
+STEP 5: DRAFT GENERATION
+Generate one or more poem drafts based on that prompt.
+
+STEP 6: REVISION LAB
+Allow the user to revise by clicking options such as:
+- make imagery stronger
+- reduce clichés
+- improve ending
+- increase musicality
+- tighten line breaks
+- make voice more intimate
+- make it darker
+- make it more restrained
+- turn abstraction into concrete imagery
+
+STEP 7: LEARNING / ANALYSIS PANEL
+Show a side panel explaining:
+- what poetic devices appear in the poem
+- notable images and symbols
+- form compliance
+- line-break observations
+- rhythm / sound observations
+- suggestions for improvement
+
+MVP PAGES / SECTIONS
+Please build a polished MVP with these views/components:
+
+1. Landing Page
+- beautiful branded intro
+- concise explanation of what Geneviève does
+- CTA to start composing
+
+2. Composition Studio
+Main workspace with panels/cards for:
+- Idea Intake
+- Form Selection
+- Style / Constraint Builder
+- Prompt Preview
+- Draft Output
+- Revision Controls
+- Analysis Panel
+
+3. Poetry Forms Library
+A browsable reference page with all supported poetry forms.
+Each form should include:
+- summary
+- origin / tradition (brief)
+- structure
+- teaching use
+- when to use it
+- sample placeholder/example area
+
+4. Optional Saved Session architecture
+Even if full auth is not implemented, structure code so saved sessions can be added later.
+
+FEATURE REQUIREMENTS
+Implement the following in code:
+
+A. DATA MODEL
+Create a clear TypeScript model for:
+- PoetryIdeaInput
+- PoetryForm
+- StyleConstraints
+- PoetryPrompt
+- PoemDraft
+- RevisionAction
+- AnalysisResult
+
+B. FORM DEFINITIONS
+Create a structured config file for all poetry forms.
+Example fields:
+- id
+- name
+- description
+- origin
+- bestFor
+- structureRules
+- difficulty
+- promptHints
+- sampleTemplate
+
+C. PROMPT BUILDER ENGINE
+Create a reusable utility that takes:
+- idea input
+- chosen form
+- style constraints
+and outputs a polished poetry-generation prompt.
+
+D. MOCK GENERATION LAYER
+If no live model is connected yet, create a mock poem generation service with sample outputs so the product is demonstrable immediately.
+Architect it so I can later connect an LLM provider via API route.
+
+E. REVISION ENGINE
+Create a structured revision action system.
+Each action should transform the draft request or generation prompt in a meaningful way.
+
+F. ANALYSIS ENGINE
+For MVP, create a rule-based analysis layer that can identify or approximate:
+- imagery density
+- repetition
+- metaphor usage
+- abstract vs concrete language
+- likely tone
+- form structure checks where possible
+
+G. UX DETAILS
+- responsive layout
+- good spacing
+- elegant typography choices via web-safe or standard stack
+- keyboard-friendly inputs
+- polished empty states
+- tasteful transitions
+- no visual chaos
+
+DESIGN NOTES
+The app should feel like a serious creative instrument.
+Avoid:
+- cartoonish icons
+- neon gradients
+- overly busy dashboards
+- gimmicky AI wording
+
+Prefer:
+- editorial layout
+- subtle cards
+- refined typography hierarchy
+- a sense of calm and intellectual clarity
+
+COPY TONE
+UI copy should be:
+- poetic but not purple
+- clear
+- confident
+- helpful
+- literary without becoming pretentious
+
+EXAMPLE MICROCOPY STYLE
+Good:
+- “Begin with an image.”
+- “Choose the vessel for the poem.”
+- “Refine the pressure and music of the lines.”
+- “Shape the draft.”
+
+Bad:
+- “Let AI make awesome poems instantly!”
+- “Magic poem creator”
+- “Vibes generator”
+
+IMPLEMENTATION PRIORITIES
+Please do this in order:
+
+1. Scaffold the project structure
+2. Define data models and poetry form configs
+3. Build the Composition Studio layout
+4. Implement idea intake and form selection
+5. Implement style/constraint controls
+6. Build prompt generator preview
+7. Add mock draft generation
+8. Add revision actions
+9. Add analysis panel
+10. Polish UI and cleanup architecture
+
+IMPORTANT ENGINEERING INSTRUCTIONS
+- Use reusable components
+- Keep code clean and readable
+- Comment only where useful
+- Avoid monolithic files
+- Use sensible folder structure
+- Make it easy to replace mock services with real APIs later
+- Keep business logic out of UI components when possible
+
+DESIRED FOLDER IDEAS
+You can adapt this, but I want something roughly like:
+- /app
+- /components/genevieve
+- /lib/poetry
+- /lib/prompting
+- /lib/analysis
+- /lib/mock
+- /types
+- /data
+
+DELIVERABLES I WANT FROM YOU
+1. Build the initial MVP codebase
+2. Show me the folder structure
+3. Explain how to run it locally
+4. Identify where to plug in a real LLM later
+5. Give me a short roadmap for phase 2
+
+PHASE 2 IDEAS TO PREPARE FOR
+Design the code so we can later add:
+- user accounts
+- saved poem notebooks
+- export to PDF / DOCX
+- side-by-side revision history
+- teaching mode for students
+- instructor/classroom mode
+- voice input for poem ideation
+- curated canonical poem examples
+- scoring / rubric tools for workshops
+
+OUTPUT FORMAT
+Work step by step and actually generate the code files.
+Do not just describe what you would build.
+Start by scaffolding the architecture and creating the core data/config files first.
+Then continue through the UI and logic.
+When you make assumptions, choose sensible defaults and proceed.
