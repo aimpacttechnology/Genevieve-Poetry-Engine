@@ -4,7 +4,9 @@ import { analyzeDraft } from '@/lib/analysis/analyzer'
 import { generateId } from '@/lib/utils'
 import type { PoetryPrompt, PoemDraft, RevisionActionType } from '@/types'
 
-const client = new Anthropic()
+const client = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? process.env.ANTHROPIC_API,
+})
 
 const REVISION_INSTRUCTIONS: Record<RevisionActionType, string> = {
   'strengthen-imagery': 'Strengthen the imagery. Replace weak or vague images with specific, sensory, concrete ones. Do not change the poem\'s subject or emotional core.',

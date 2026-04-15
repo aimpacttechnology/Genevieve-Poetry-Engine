@@ -66,6 +66,7 @@ export function CompositionStudio() {
   const [isRevising, setIsRevising] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [outputTab, setOutputTab] = useState<'draft' | 'analysis'>('draft')
+  const [error, setError] = useState<string | null>(null)
 
   const canGenerate = !!(idea.topic && selectedForm)
 
@@ -81,8 +82,8 @@ export function CompositionStudio() {
     setIsGenerating(true)
     setDraft(null)
     setAnalysis(null)
+    setError(null)
 
-    // Auto-build prompt from current state
     const form = POETRY_FORM_MAP[selectedForm]
     const builtPrompt = buildPoetryPrompt(idea, form, style)
     setPrompt(builtPrompt)
@@ -94,7 +95,13 @@ export function CompositionStudio() {
         body: JSON.stringify({ prompt: builtPrompt }),
       })
       const data = await res.json()
-      setDraft(data.draft)
+      if (!res.ok || data.error) {
+        setError(data.error ?? `Server error ${res.status}`)
+      } else {
+        setDraft(data.draft)
+      }
+    } catch (e) {
+      setError('Could not reach the server. Check your connection.')
     } finally {
       setIsGenerating(false)
     }
@@ -241,6 +248,11 @@ export function CompositionStudio() {
 
         {/* Generate — always visible at bottom */}
         <div className="p-4 border-t border-border/20 space-y-1.5">
+          {error && (
+            <p className="text-[11px] text-red-400/80 bg-red-400/10 border border-red-400/20 rounded px-3 py-2 leading-snug">
+              {error}
+            </p>
+          )}
           <Button
             onClick={handleGenerate}
             disabled={!canGenerate || isGenerating}
