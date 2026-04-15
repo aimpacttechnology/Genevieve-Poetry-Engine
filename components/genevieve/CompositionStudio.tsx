@@ -322,7 +322,7 @@ export function CompositionStudio() {
 
             <div className="flex-1 overflow-auto p-6">
               {outputTab === 'draft' ? (
-                <DraftOutput draft={draft} isGenerating={isGenerating} />
+                <DraftOutput draft={draft} isGenerating={isGenerating} form={selectedForm} />
               ) : (
                 <AnalysisPanel analysis={analysis} isAnalyzing={isAnalyzing} />
               )}

@@ -118,6 +118,23 @@ export interface AnalysisResult {
   suggestions: string[]
 }
 
+// Saved poem (localStorage)
+export interface SavedPoem {
+  id: string
+  title: string
+  content: string
+  form: PoetryFormId | null
+  source: 'ai' | 'wizard' | 'template'
+  createdAt: string
+}
+
+// Wizard chat message
+export interface WizardMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+}
+
 // Session state (for future persistence layer)
 export interface CompositionSession {
   id: string

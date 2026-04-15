@@ -45,11 +45,17 @@ export default function LandingPage() {
           <span className="text-muted-foreground/40 text-sm">Poetry Engine</span>
         </div>
         <nav className="flex items-center gap-4">
-          <Link
-            href="/forms"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Forms Library
+          <Link href="/forms" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            Forms
+          </Link>
+          <Link href="/template" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            Templates
+          </Link>
+          <Link href="/wizard" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            Wizard
+          </Link>
+          <Link href="/notebook" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+            Notebook
           </Link>
           <Link href="/studio">
             <Button size="sm" className="text-xs">
