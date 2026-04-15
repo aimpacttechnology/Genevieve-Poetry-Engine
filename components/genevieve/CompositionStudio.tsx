@@ -4,14 +4,13 @@ import { useState, useCallback } from 'react'
 import { IdeaIntake } from './IdeaIntake'
 import { FormSelector } from './FormSelector'
 import { StyleBuilder } from './StyleBuilder'
-import { PromptPreview } from './PromptPreview'
 import { DraftOutput } from './DraftOutput'
 import { RevisionControls } from './RevisionControls'
 import { AnalysisPanel } from './AnalysisPanel'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type {
   PoetryIdeaInput,
   PoetryFormId,
@@ -23,7 +22,7 @@ import type {
 } from '@/types'
 import { buildPoetryPrompt } from '@/lib/prompting/promptBuilder'
 import { POETRY_FORM_MAP } from '@/data/poetryForms'
-import { ChevronRight, Feather, Wand2, RotateCcw } from 'lucide-react'
+import { Check, ChevronRight, Wand2, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const DEFAULT_IDEA: PoetryIdeaInput = {
@@ -68,26 +67,31 @@ export function CompositionStudio() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [outputTab, setOutputTab] = useState<'draft' | 'analysis'>('draft')
 
-  const buildPrompt = useCallback(() => {
-    if (!selectedForm) return
-    const form = POETRY_FORM_MAP[selectedForm]
-    if (!form) return
-    const built = buildPoetryPrompt(idea, form, style)
-    setPrompt(built)
-  }, [idea, selectedForm, style])
+  const canGenerate = !!(idea.topic && selectedForm)
 
-  const canGenerate = !!(idea.topic && selectedForm && prompt)
+  // Hint shown below the generate button
+  const generateHint = !idea.topic
+    ? 'Add a topic on the Idea step to begin.'
+    : !selectedForm
+    ? 'Select a form to continue.'
+    : null
 
   const handleGenerate = async () => {
-    if (!prompt) return
+    if (!idea.topic || !selectedForm) return
     setIsGenerating(true)
     setDraft(null)
     setAnalysis(null)
+
+    // Auto-build prompt from current state
+    const form = POETRY_FORM_MAP[selectedForm]
+    const builtPrompt = buildPoetryPrompt(idea, form, style)
+    setPrompt(builtPrompt)
+
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt: builtPrompt }),
       })
       const data = await res.json()
       setDraft(data.draft)
@@ -140,10 +144,19 @@ export function CompositionStudio() {
     setActiveStep('idea')
   }
 
+  const stepComplete = useCallback(
+    (id: StepId) =>
+      (id === 'idea' && !!idea.topic) ||
+      (id === 'form' && !!selectedForm) ||
+      id === 'style',
+    [idea.topic, selectedForm]
+  )
+
   return (
-    <div className="h-full flex flex-col lg:flex-row gap-0 overflow-hidden">
-      {/* Left panel — composition controls */}
-      <div className="w-full lg:w-[400px] xl:w-[440px] shrink-0 flex flex-col border-r border-border/30 bg-card/20">
+    <div className="flex flex-col lg:flex-row lg:h-full lg:overflow-hidden">
+      {/* ── Left panel — composition controls ── */}
+      <div className="w-full lg:w-[400px] xl:w-[440px] shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-border/30 bg-card/20">
+
         {/* Step nav */}
         <div className="flex items-center gap-1 px-5 py-3 border-b border-border/20">
           {STEPS.map((step, i) => (
@@ -151,12 +164,15 @@ export function CompositionStudio() {
               <button
                 onClick={() => setActiveStep(step.id)}
                 className={cn(
-                  'px-3 py-1 rounded text-xs font-medium transition-all',
+                  'px-3 py-1 rounded text-xs font-medium transition-all flex items-center gap-1.5',
                   activeStep === step.id
                     ? 'bg-primary/15 text-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
+                {stepComplete(step.id) && activeStep !== step.id && (
+                  <Check className="w-3 h-3 text-primary/60" />
+                )}
                 {step.label}
               </button>
               {i < STEPS.length - 1 && (
@@ -175,27 +191,56 @@ export function CompositionStudio() {
 
         {/* Step content */}
         <ScrollArea className="flex-1">
-          <div className="p-5">
-            {activeStep === 'idea' && <IdeaIntake value={idea} onChange={setIdea} />}
-            {activeStep === 'form' && (
-              <FormSelector selected={selectedForm} onSelect={setSelectedForm} />
+          <div className="p-5 space-y-4">
+
+            {activeStep === 'idea' && (
+              <>
+                <IdeaIntake value={idea} onChange={setIdea} />
+                {idea.topic && (
+                  <Button
+                    onClick={() => setActiveStep('form')}
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs"
+                  >
+                    Continue to Form
+                    <ChevronRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Button>
+                )}
+              </>
             )}
-            {activeStep === 'style' && <StyleBuilder value={style} onChange={setStyle} />}
+
+            {activeStep === 'form' && (
+              <>
+                <FormSelector selected={selectedForm} onSelect={setSelectedForm} />
+                {selectedForm && (
+                  <Button
+                    onClick={() => setActiveStep('style')}
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs"
+                  >
+                    Continue to Style
+                    <ChevronRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Button>
+                )}
+              </>
+            )}
+
+            {activeStep === 'style' && (
+              <>
+                <StyleBuilder value={style} onChange={setStyle} />
+                <p className="text-[11px] text-muted-foreground/50 text-center pt-1">
+                  Style settings are live — generate when ready.
+                </p>
+              </>
+            )}
+
           </div>
         </ScrollArea>
 
-        {/* Bottom controls */}
-        <div className="p-4 border-t border-border/20 space-y-2">
-          <Button
-            onClick={buildPrompt}
-            disabled={!idea.topic || !selectedForm}
-            variant="outline"
-            className="w-full text-xs"
-            size="sm"
-          >
-            <Feather className="w-3.5 h-3.5 mr-2" />
-            Build Composition Prompt
-          </Button>
+        {/* Generate — always visible at bottom */}
+        <div className="p-4 border-t border-border/20 space-y-1.5">
           <Button
             onClick={handleGenerate}
             disabled={!canGenerate || isGenerating}
@@ -205,11 +250,15 @@ export function CompositionStudio() {
             <Wand2 className="w-3.5 h-3.5 mr-2" />
             {isGenerating ? 'Generating…' : 'Generate Draft'}
           </Button>
+          {generateHint && (
+            <p className="text-[10px] text-muted-foreground/50 text-center">{generateHint}</p>
+          )}
         </div>
       </div>
 
-      {/* Right panel — output */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      {/* ── Right panel — output ── */}
+      <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden">
+
         {/* Prompt preview strip */}
         {prompt && (
           <div className="border-b border-border/20 bg-card/10">
@@ -224,9 +273,10 @@ export function CompositionStudio() {
           </div>
         )}
 
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden">
+
           {/* Draft + analysis */}
-          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden">
             <div className="flex items-center justify-between px-6 py-3 border-b border-border/20">
               <Tabs value={outputTab} onValueChange={(v) => setOutputTab(v as 'draft' | 'analysis')}>
                 <TabsList className="h-7 bg-muted/30">
@@ -274,7 +324,7 @@ export function CompositionStudio() {
                 Shape the Draft
               </p>
             </div>
-            <ScrollArea className="h-full max-h-[calc(100vh-200px)]">
+            <ScrollArea className="h-full max-h-[400px] lg:max-h-[calc(100vh-200px)]">
               <div className="p-4">
                 <RevisionControls
                   onRevise={handleRevise}
@@ -284,6 +334,7 @@ export function CompositionStudio() {
               </div>
             </ScrollArea>
           </div>
+
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function StudioPage() {
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="min-h-screen flex flex-col lg:h-screen lg:overflow-hidden">
       {/* Studio header */}
       <header className="shrink-0 border-b border-border/30 px-4 py-3 flex items-center justify-between bg-card/20">
         <div className="flex items-center gap-4">
@@ -33,7 +33,7 @@ export default function StudioPage() {
       </header>
 
       {/* Studio workspace */}
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 lg:overflow-hidden">
         <CompositionStudio />
       </main>
     </div>

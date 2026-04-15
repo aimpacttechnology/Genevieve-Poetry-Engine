@@ -54,6 +54,9 @@ export function FormSelector({ selected, onSelect }: FormSelectorProps) {
           </div>
           {selected === form.id && (
             <div className="mt-3 pt-3 border-t border-border/30 space-y-2 animate-fade-in">
+              <p className="text-[10px] uppercase tracking-widest text-primary/60 font-medium">
+                ✓ Selected — continue to Style below
+              </p>
               <p className="text-xs text-muted-foreground">
                 <span className="text-foreground/60 font-medium">Best for: </span>
                 {form.bestFor}
