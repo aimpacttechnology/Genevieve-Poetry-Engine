@@ -2,7 +2,6 @@
 
 import type { PoemDraft } from '@/types'
 import type { PoetryFormId } from '@/types'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { SaveExportActions } from './SaveExportActions'
 import { Loader2 } from 'lucide-react'
 
@@ -35,18 +34,16 @@ export function DraftOutput({ draft, isGenerating, form }: DraftOutputProps) {
 
   return (
     <div className="space-y-4">
-      <ScrollArea className="max-h-[480px]">
-        <div className="px-1">
-          {draft.title && (
-            <h3 className="font-serif text-base font-semibold text-foreground mb-4 pb-3 border-b border-border/30">
-              {draft.title}
-            </h3>
-          )}
-          <div className="font-serif text-sm leading-8 text-foreground/90 whitespace-pre-line animate-fade-in">
-            {draft.content}
-          </div>
+      <div className="px-1">
+        {draft.title && (
+          <h3 className="font-serif text-base font-semibold text-foreground mb-4 pb-3 border-b border-border/30">
+            {draft.title}
+          </h3>
+        )}
+        <div className="font-serif text-sm leading-8 text-foreground/90 whitespace-pre-line animate-fade-in">
+          {draft.content}
         </div>
-      </ScrollArea>
+      </div>
       <SaveExportActions
         title={draft.title ?? 'Untitled'}
         content={draft.content}
