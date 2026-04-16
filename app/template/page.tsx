@@ -17,7 +17,10 @@ export default function TemplatePage() {
           <div className="flex items-center gap-2">
             <span className="font-serif text-sm font-semibold text-primary/80">Geneviève</span>
             <span className="text-muted-foreground/40 text-xs">/</span>
-            <span className="text-xs text-muted-foreground">Template Builder</span>
+            <span className="text-xs text-muted-foreground">Manual Templates</span>
+            <span className="text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-400">
+              No AI
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-4 text-xs text-muted-foreground/60">
